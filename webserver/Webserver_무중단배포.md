@@ -1,15 +1,10 @@
 # 웹서버와 무중단 배포
 
 ---
-[1. Web Server](#1-web-server)  
-    [1-1. 웹 서버란?](#1-1--)  
-    [1-2. 웹 서버의 흐름](#1-2--)  
-[2. Apache](#2-apache)  
-    [2-1. Apache란?](#2-1-)  
-    [2-2. 주요 특징](#2-2--)  
-    [2-3. 대표적인 구동 방식 종류](#2-3----)  
-    [2-4. 단점](#2-4-)  
-[3. Nginx](#3-nginx)  
+
+<div contenteditable="false" class="pseudoSelection" data-content-editable-void="true" style="user-select: none; --pseudoSelection--background:transparent; width: 100%; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; flex-grow: 0; z-index: 2;">
+</div>
+
 ---
 
 # 1. Web Server
