@@ -1,12 +1,5 @@
 # 웹서버와 무중단 배포
 
----
-
-<div contenteditable="false" class="pseudoSelection" data-content-editable-void="true" style="user-select: none; --pseudoSelection--background:transparent; width: 100%; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; flex-grow: 0; z-index: 2;">
-</div>
-
----
-
 # 1. Web Server
 
 ### 1-1. 웹 서버란?
