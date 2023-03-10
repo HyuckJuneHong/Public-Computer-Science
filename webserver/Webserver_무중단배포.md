@@ -5,19 +5,12 @@
 <!-- 목차 -->
 - [목차](#목차)
 - [Web Server](#1-web-server)
+  - [Web Server 개념](#1-1-웹-서버란)
+  - [Web Server 흐름](#1-2-웹서버의-흐름)
 - [Apache](#2-apache)
 - [Nginx](#3-nginx)
 - [Apache vs Nginx](#4-정리)
-- [무중단배포](#5-무중단배포)
-- [비정규화](#비정규화)
-- [Index](#index)
-- [트랜잭션](#트랜잭션)
-- [트랜잭션 격리수준](#트랜잭션-격리수준)
-- [SQL vs NoSQL](#sql-vs-nosql)
-- [쿼리 실행 과정](#쿼리-실행-과정)
-- [Partitioning and Sharding](#partitioning-and-sharding)
-- [Replication](#replication)
-- [Shared lock vs Exclusive lock](#shared-lock-vs-exclusive-lock)
+- [무중단배포](#5-무중단-배포)
 <!-- /목차 -->
 
 
