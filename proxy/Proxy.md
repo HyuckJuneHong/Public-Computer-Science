@@ -69,7 +69,7 @@ public class Team{
 
 ### Proxy 초기화 동작 과정
 
-![Untitled](2%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20-%20%E1%84%91%E1%85%B3%E1%84%85%E1%85%A9%E1%86%A8%E1%84%89%E1%85%B5%20995bac22da674d26845747d1514cce78/Untitled.png)
+![Untitled](./image/Untitled.png)
 
 ```java
 //MemberProxy 객체 반환
