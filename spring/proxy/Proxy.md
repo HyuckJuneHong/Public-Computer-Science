@@ -1,4 +1,4 @@
-# 프록시(Proxy)
+# 프록시(Proxy) - 로딩 전략, 영속성 전이
 
 ## 목차
 
@@ -15,6 +15,12 @@
   - [즉시 로딩(EAGER LOADING)](#즉시-로딩EAGER-LOADING)
   - [지연 로딩(LAZY LOADING)](#지연-로딩LAZY-LOADING)
   - [JPA 기본 Fetch 전략](#JPA-기본-Fetch-전략)
+- [영속성 전이(CASCADE)](#영속성-전이-CASCADE)
+  - [영속성 전이 : 저장](#영속성-전이-저장)
+  - [영속성 전이 : 삭제](#영속성-전이-삭제)
+  - [CASCADE의 종류](#CASCADE의-종류)
+  - [고아 객체](#고아객체)
+  - [영속성 전이 + 고아 객체, 생명 주기](#영속성-전이와-고아객체-생명주기)
 
 <!-- /목차 -->
 
@@ -183,7 +189,6 @@ member.getName();
     from team
     where team_id = 'id1'
     ```
-    
 
 ### JPA 기본 Fetch 전략
 
@@ -199,3 +204,88 @@ member.getName();
 - **추천 방법**
     - 첫 개발 시점에는 모든 연관관계에 지연 로딩을 사용.
     - 그리고 개발 완료 시점에 필요한 곳만 즉시로딩을 사용하도록 최적화.
+
+# 영속성-전이(CASCADE)
+
+- 특정 엔티티를 영속 상태로 만들 때 연관된 엔티티도 함께 영속 상태로 만들때 사용.
+- JPA에서 엔티티를 저장할 때 연관된 모든 엔티티는 영속 상태여야 한다.
+- 단, 영속성 전이는 연관관계를 매핑하는 것과는 아무 관련이 없다.
+- **단지 영속화할 때 연관된 엔티티도 같이 영속화하는 편리함을 제공할 뿐이다.** 
+
+### 영속성 전이 저장
+
+```java
+@Entity
+public class Parent{
+  ...
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
+  private List<Child> children = new ArrayList<>();
+  ...
+}
+```
+- 코드처럼 부모만 영속화하면 Cascade를 설정한 자식 엔티티까지 함께 영속화해서 저장된다.
+
+### 영속성 전이 삭제
+```java
+@Entity
+public class Parent{
+  ...
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+  private List<Child> children = new ArrayList<>();
+  ...
+}
+```
+- 코드처럼 부모만 영속화하면 Cascade를 설정한 자식 엔티티까지 함께 영속화해서 삭제된다.
+
+### CASCADE의 종류
+```java
+public enum CascadeType {
+  ALL,          //모두 적용 : 모든 영속성 전이 옵션을 적용
+  PERSIST,      //영속 : 새로운 엔티티를 영속화할 때 적용(연관 엔티티 함께 저장)
+  MERGE,        //병합 : 준영속 상태의 엔티티를 영속 상태로 변경할 때 적용(연관 엔티티 함께 수정)
+  REMOVE,       //삭제 : 엔티티 삭제할 때 적용(연관 엔티티 함께 삭제)
+  REFRESH,      //새로고침 : 엔티티 새로고침할 때 적용(연관 엔티티 함께 새로고침)
+  DETACH        //분리 : 영속성 컨텍스트에서 분리할 때 적용(연관 엔티티 함께 분리)
+}
+```
+
+### 고아객체
+
+- JPA는 부모 엔티티와 연관관계가 끊어진 자식 엔티티를 자동으로 삭제하는 기능을 제공한다.
+- 이를 고아 객체 제거라고 한다. (Orphan)
+- **부모 엔티티의 컬렉션에서 자식 엔티티의 참조만 제거하면 자식 엔티티가 자동으로 삭제되는 기능이다.**
+- **즉, 참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하는 기능이다.**
+- 단, 이 옵션은 `@OneToOne, @OneToMany` 에서만 사용 가능하다.
+
+```java
+@Entity
+public class Parent {
+  @Id @GeneratedValue
+  private Long id;
+  
+  @OneToMany(mappedBy = "parent", orphanRemoval = true)
+  private List<Child> children = new ArrayList<>();
+}
+
+...
+        Parent parent = em.find(Parent.class, id);
+        parent.getChildren().remove(0);     //자식 엔티티 컬렉션에서 제거
+...
+```
+
+**실행결과**
+```sql
+  DELETE 
+  FROM child
+  WHERE id=?
+```
+- 코드를 보면 컬렉션에서 child를 제거하니 `orphanRemoval=true` 옵션으로 인해 디비의 데이터도 삭제되는 것을 볼 수 있다.
+- 즉, 고아 객체 제거 기능은 영속성 컨텍스트를 플러시할 때 적용되므로 플러시 시점에 DELETE SQL이 실행된다.
+
+**정리**
+### 영속성 전이와 고아객체, 생명주기
+
+**`CascadeType.ALL + orphanRemoval=true`를 동시에 사용하면 다음과 같다.**
+- 일반적으로 엔티티는 `EntityManager.persist()`를 통해 영속화 되고 `EntityManager.remove()`를 통해 제거된다.
+- 이는 엔티티 스스로 생명주기를 관리한다는 뜻이니 이 두 옵션을 모두 활성화하면 부모 엔티티를 통해 자식의 생명주기를 관리할 수 있게 된다.
+
