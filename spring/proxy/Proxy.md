@@ -282,7 +282,6 @@ public class Parent {
 - 코드를 보면 컬렉션에서 child를 제거하니 `orphanRemoval=true` 옵션으로 인해 디비의 데이터도 삭제되는 것을 볼 수 있다.
 - 즉, 고아 객체 제거 기능은 영속성 컨텍스트를 플러시할 때 적용되므로 플러시 시점에 DELETE SQL이 실행된다.
 
-**정리**
 ### 영속성 전이와 고아객체, 생명주기
 
 **`CascadeType.ALL + orphanRemoval=true`를 동시에 사용하면 다음과 같다.**
