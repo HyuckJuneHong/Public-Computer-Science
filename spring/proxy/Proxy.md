@@ -15,7 +15,7 @@
   - [즉시 로딩(EAGER LOADING)](#즉시-로딩EAGER-LOADING)
   - [지연 로딩(LAZY LOADING)](#지연-로딩LAZY-LOADING)
   - [JPA 기본 Fetch 전략](#JPA-기본-Fetch-전략)
-- [영속성 전이(CASCADE)](#영속성-전이-CASCADE)
+- [영속성 전이(CASCADE)](#영속성-전이CASCADE)
   - [영속성 전이 : 저장](#영속성-전이-저장)
   - [영속성 전이 : 삭제](#영속성-전이-삭제)
   - [CASCADE의 종류](#CASCADE의-종류)
